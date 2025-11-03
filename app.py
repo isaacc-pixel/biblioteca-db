@@ -23,6 +23,7 @@ login_manager.login_view = "login"
 class User(UserMixin):
     def __init__(self, id, nome):
         self.id = id
+        self.nome = nome
         # self.nome = nome
 
     def get_id(self):
@@ -33,7 +34,7 @@ class User(UserMixin):
 def load_user(id):
     # GIVA: função que pega os dados do usuário a partir do id (de preferência retornar em um dicionário com os dados pra facilitar minha vida)
     user = getUserById(id)
-    return User(id, user["nome"])
+    return User(id, user["Nome_usuario"])
     # return User(id, usuario['nome'])
 
 
@@ -50,17 +51,16 @@ def cadastro():
         telefone = request.form.get("telefone")
         senha = request.form.get("senha")
 
-        userexists = getUserByEmail(email)
+        user = getUserByEmail(email)
 
-        if userexists is not None:
+        print(user)
 
+        if not user:
             senha_hash = generate_password_hash(senha)
             addUser(nome, email, telefone, senha_hash)
-
         else:
-            flash("Erro, email cadastrado")
-            redirect(url_for("cadastro"))
-
+            flash("Este email já está cadastrado", "error")
+            return redirect(url_for("cadastro"))
         return redirect(url_for("login"))
     return render_template("cadastro.html")
 
@@ -75,7 +75,7 @@ def login():
 
         if user is not None:
             if check_password_hash(user["Senha_hash"], senha):
-                login_user(user["ID_usuario"])
+                login_user(User(user["ID_usuario"], user["Nome_usuario"]))
 
         return redirect(url_for("index"))
     return render_template("login.html")

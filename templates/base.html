@@ -12,9 +12,8 @@
         </nav>
         <nav> <!-- LINKS DE AUTENTICAÇÃO -->
             {% if current_user.is_authenticated %}
-                {{ current_user.id }}
-                
-                <a href="{{ url_for('logout') }}">Logout</a>
+                <span>Bem vindo, {{ current_user.nome }} | </span>
+                <a href="{{ url_for('logout') }}">Sair</a>
             {% else %}
                 <a href="{{ url_for('login') }}">Login</a>
                 <a href="{{ url_for('cadastro') }}">Cadastro</a>

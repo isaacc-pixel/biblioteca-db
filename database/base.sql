@@ -23,12 +23,12 @@ CREATE TABLE Editoras (
 CREATE TABLE Livros (
     ID_livro INT AUTO_INCREMENT PRIMARY KEY,
     Titulo VARCHAR(255) NOT NULL,
-    Autor_id INT,
-    ISBN VARCHAR(13) NOT NULL,
+    Autor_id INT NOT NULL,
+    ISBN VARCHAR(13) UNIQUE NOT NULL,
     Ano_publicacao INT,
-    Genero_id INT,
-    Editora_id INT,
-    Quantidade_disponivel INT,
+    Genero_id INT NOT NULL,
+    Editora_id INT NOT NULL,
+    Quantidade_disponivel INT NOT NULL,
     Resumo TEXT,
     FOREIGN KEY (Autor_id) REFERENCES Autores(ID_autor),
     FOREIGN KEY (Genero_id) REFERENCES Generos(ID_genero),
@@ -38,20 +38,21 @@ CREATE TABLE Livros (
 CREATE TABLE Usuarios (
     ID_usuario INT AUTO_INCREMENT PRIMARY KEY,
     Nome_usuario VARCHAR(255) NOT NULL,
-    Email VARCHAR(255),
+    Email VARCHAR(255) UNIQUE NOT NULL,
+    Senha_hash VARCHAR(255) NOT NULL,
     Numero_telefone VARCHAR(15),
-    Data_inscricao DATE,
-    Multa_atual DECIMAL(10, 2)
+    Data_inscricao DATE NOT NULL,
+    Multa_atual DECIMAL(10, 2) NOT NULL DEFAULT(0)
 );
 
 CREATE TABLE Emprestimos (
     ID_emprestimo INT AUTO_INCREMENT PRIMARY KEY,
-    Usuario_id INT,
-    Livro_id INT,
-    Data_emprestimo DATE,
-    Data_devolucao_prevista DATE,
+    Usuario_id INT NOT NULL,
+    Livro_id INT NOT NULL,
+    Data_emprestimo DATE NOT NULL,
+    Data_devolucao_prevista DATE NOT NULL,
     Data_devolucao_real DATE,
-    Status_emprestimo ENUM('pendente', 'devolvido', 'atrasado'),
+    Status_emprestimo ENUM('pendente', 'devolvido', 'atrasado') NOT NULL,
     FOREIGN KEY (Usuario_id) REFERENCES Usuarios(ID_usuario),
     FOREIGN KEY (Livro_id) REFERENCES Livros(ID_livro)
 );
