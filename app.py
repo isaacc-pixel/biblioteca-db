@@ -8,13 +8,9 @@ from flask_login import (
     LoginManager,
     UserMixin,
 )
-from db import addUser, getUserById, getUserByEmail
-import mysql.connector
+from database.db import initDB, addUser, getUserById, getUserByEmail
 
-con = mysql.connector.connect(
-    user="root", password="", host="127.0.0.1", database="db_trabalho3B"
-)
-con.close()
+initDB()
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "CHAVE SUPER SECRETA"

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block main %}
-<form action="url_for('login')" method="post">
+<form action="{{ url_for('login') }}" method="post">
     <div>
         <label for="email">Email</label>
         <input type="email" id="email" name="email">

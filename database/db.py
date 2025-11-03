@@ -1,13 +1,41 @@
-import mysql.connector
+import mysql.connector 
 from datetime import datetime
+from database.config import USER, HOST, PORT, DATABASE, SQL_BASE
+
+
+def connect() -> mysql.connector.MySQLConnection:
+    conn = mysql.connector.connect(
+        user=USER, 
+        host=HOST, 
+        port=PORT, 
+        database=DATABASE
+    )
+
+    return conn 
+
+
+def initDB():
+    try:
+        conn = connect()
+        conn.close()
+    except:
+        conn = mysql.connector.connect(
+            user=USER, 
+            host=HOST, 
+            port=PORT
+        )
+        cur = conn.cursor()
+
+        with open(SQL_BASE, 'r') as base:
+            cur.execute(base.read())
+
+        cur.close()
+        conn.close()
 
 
 def addUser(nome, email, numero, senha_hash):
-
-    con = mysql.connector.connect(
-        user="root", password="", host="127.0.0.1", database="db_trabalho3B"
-    )
-    cur = con.cursor()
+    conn = connect()
+    cur = conn.cursor()
 
     adduser = (
         "INSERT INTO Usuarios"
@@ -21,23 +49,21 @@ def addUser(nome, email, numero, senha_hash):
 
     cur.execute(adduser, usuario)
 
-    con.commit()
+    conn.commit()
     cur.close()
-    con.close()
+    conn.close()
 
 
 def getUserById(id):
-    con = mysql.connector.connect(
-        user="root", password="", host="127.0.0.1", database="db_trabalho3B"
-    )
-    cur = con.cursor(dictionary=True)
+    conn = connect()
+    cur = conn.cursor(dictionary=True)
 
     query = (
         "SELECT Nome_usuario, Email, Numero_telefone, Senha_hash, Data_inscricao, Multa_atual"
         "WHERE ID_usuario = %s"
     )
 
-    cur.execute(query, (id))
+    cur.execute(query, (id,))
     data = cur.fetchone()
 
     user = {
@@ -49,22 +75,20 @@ def getUserById(id):
         "Multa_atual": data["Multa_atual"],
     }
     cur.close()
-    con.close()
+    conn.close()
     return user
 
 
 def getUserByEmail(email):
-    con = mysql.connector.connect(
-        user="root", password="", host="127.0.0.1", database="db_trabalho3B"
-    )
-    cur = con.cursor(dictionary=True)
+    conn = connect()
+    cur = conn.cursor(dictionary=True)
 
     query = (
-        "SELECT Nome_usuario, Email, Numero_telefone, Senha_hash, Data_inscricao, Multa_atual"
-        "WHERE Email = %s"
+        "SELECT Nome_usuario, Email, Numero_telefone, Senha_hash, Data_inscricao, Multa_atual",
+        "WHERE Email = %s",
     )
 
-    cur.execute(query, (email))
+    cur.execute(query, (email,))
     data = cur.fetchone()
 
     user = {
@@ -76,5 +100,5 @@ def getUserByEmail(email):
         "Multa_atual": data["Multa_atual"],
     }
     cur.close()
-    con.close()
+    conn.close()
     return user
