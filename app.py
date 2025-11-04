@@ -12,7 +12,7 @@ from database.db import initDB, initBooks, addUser, getUserById, getUserByEmail
 
 initDB()
 
-initBooks() #TODO
+#initBooks() #TODO
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "CHAVE SUPER SECRETA"

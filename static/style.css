@@ -46,6 +46,33 @@ header a:hover {
     flex-direction: column;
     width: 20em;
     text-transform: uppercase;
+    box-shadow: 0 10px 25px;
+}
+
+.message {
+    text-transform: uppercase;
+    font-size: 12px;
+    background: #C1A782;
+    color: #fff;
+    padding: 20px;
+    margin: 200px auto;
+    border-radius: 15px;
+    max-width: 800px;
+    text-align: center;
+    box-shadow: 0 10px 25px;
+}
+
+.message h1 {
+    font-size: 2.5em;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.message p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 10px;
 }
 
 label {
