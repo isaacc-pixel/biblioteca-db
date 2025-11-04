@@ -12,7 +12,7 @@ from database.db import initDB, initBooks, addUser, getUserById, getUserByEmail
 
 initDB()
 
-#initBooks() #TODO
+# initBooks() #TODO
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "CHAVE SUPER SECRETA"
@@ -35,7 +35,7 @@ class User(UserMixin):
 @login_manager.user_loader
 def load_user(id):
     user = getUserById(id)
-    return User(id, user["Nome_usuario"])
+    return User(id, user["nome_usuario"])
 
 
 @app.route("/")
@@ -74,8 +74,8 @@ def login():
         user = getUserByEmail(email)
 
         if user is not None:
-            if check_password_hash(user["Senha_hash"], senha):
-                login_user(User(user["ID_usuario"], user["Nome_usuario"]))
+            if check_password_hash(user["senha_hash"], senha):
+                login_user(User(user["id_usuario"], user["nome_usuario"]))
 
         return redirect(url_for("index"))
     return render_template("login.html")

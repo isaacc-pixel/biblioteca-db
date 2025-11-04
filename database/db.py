@@ -30,8 +30,8 @@ def initDB():
         cur = conn.cursor()
         with open(SQL_BASE, 'r') as base:
             cur.execute(base.read())
-        cur.close()
         conn.commit()
+        cur.close()
         conn.close()
 
 def initBooks():
