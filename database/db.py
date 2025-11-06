@@ -64,6 +64,30 @@ def initBooks():
     # cur.close()
     # conn.close()
 
+def getBooks():
+    with connect() as conn:
+        cur = conn.cursor(dictionary=True)
+
+        query = '''
+            SELECT 
+                l.*,
+                g.nome_genero,
+                a.nome_autor,
+                e.nome_editora
+            FROM livros l
+            INNER JOIN generos g
+                ON l.genero_id = g.id_genero
+            INNER JOIN autores a
+                ON l.autor_id = a.id_autor
+            INNER JOIN editoras e
+                ON l.editora_id = e.id_editora
+        '''
+
+        cur.execute(query)
+        livros = cur.fetchall()
+        cur.close()
+    return livros
+
 def addUser(nome, email, numero, senha_hash):
     conn = connect()
     cur = conn.cursor()
