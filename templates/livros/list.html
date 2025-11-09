@@ -3,7 +3,7 @@
 {% block main %}
 {% for livro in livros %}
 {% if livro["quantidade_disponivel"] > 0 and livro["id_livro"] not in nao_exibir%}
-<div>
+<div class="livros">
     <h3>{{ livro["titulo"] }}</h3>
     <p>{{ livro["resumo"] }}</p>
     <p>Gênero: {{ livro["nome_genero"] }}</p>
