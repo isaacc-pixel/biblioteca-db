@@ -84,11 +84,11 @@ def addUserBook(user_id, book_id):
     data_emprestimo = date.today()
 
     if data_emprestimo.day + 7 > 31:
-        devolucao_prevista = date(data_emprestimo.year, data_emprestimo.month+1, data_emprestimo.day+7-31).strftime("%Y-%m-%d")
+        devolucao_prevista = date(data_emprestimo.year, data_emprestimo.month+1, data_emprestimo.day+7-31)
     else:
-        devolucao_prevista = date(data_emprestimo.year, data_emprestimo.month, data_emprestimo.day + 7).strftime("%Y-%m-%d")
+        devolucao_prevista = date(data_emprestimo.year, data_emprestimo.month, data_emprestimo.day + 7)
 
-    data_emprestimo = data_emprestimo.strftime("%Y-%m-%d")
+    data_emprestimo = data_emprestimo
 
     query = '''
         INSERT INTO emprestimos (usuario_id, livro_id, data_emprestimo, data_devolucao_prevista, status_emprestimo) 
@@ -138,7 +138,7 @@ def getUserBooks(user_id):
 
 def returnBook(emprestimo_id):
     # depois fazer adicionar na multa se estiver atrasado
-    data_devolucao = date.today().strftime("%Y-%m-%d")
+    data_devolucao = date.today()
 
     query = '''
         UPDATE emprestimos
@@ -164,9 +164,9 @@ def addUser(nome, email, numero, senha_hash):
         VALUES (%s, %s, %s, %s, %s, %s)
     '''
     
-    data = date.today().strftime("%Y-%m-%d")
+    data = date.today()
 
-    usuario = (nome, email, numero, senha_hash, date, 0)
+    usuario = (nome, email, numero, senha_hash, data, 0)
 
     cur.execute(adduser, usuario)
 

@@ -2,7 +2,7 @@
 
 {% block main %}
 {% for emprestimo in emprestimos %}
-<div>
+<div class="livros">
     <h3>{{ emprestimo["titulo"] }}</h3>
     <p>Estado de devolução: {{ emprestimo["status_emprestimo"] }}</p>
     <p>Data de empréstimo: {{ emprestimo["data_emprestimo"] }}</p>
