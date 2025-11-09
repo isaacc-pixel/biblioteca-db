@@ -22,7 +22,6 @@ INSERT INTO generos (nome_genero) VALUES
 ('Aventura'),
 ('Distopia');
 
--- Inserção de editoras necessárias para as referências em livros
 INSERT INTO editoras (nome_editora, endereco_editora) VALUES
 ('Editora Aurora', 'Rua das Flores, 10, Centro'),
 ('Editora Horizonte', 'Av. Paulista, 1000, Bela Vista'),

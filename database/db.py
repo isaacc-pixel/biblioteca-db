@@ -42,15 +42,13 @@ def initBooks():
     with open(SQL_INSERTS, 'r', encoding='utf-8') as inserts:
         sql = inserts.read()
 
-    # divide o script em statements e executa um a um
-    statements = [s.strip() for s in sql.split(';') if s.strip()]
-    for stmt in statements:
-        try:
-            cur.execute(stmt)
-        except Exception:
-            # ignora statements vazios ou que já foram aplicados
-            pass
-
+    for query in sql.split(';'):
+        # print('+'*40)
+        # print(query)
+        # print(query.strip())
+        if query.strip():
+            cur.execute(query.strip())
+            
     conn.commit()
     cur.close()
     conn.close()
