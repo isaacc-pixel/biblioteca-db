@@ -211,3 +211,42 @@ def getUserByEmail(email):
     cur.close()
     conn.close()
     return user
+
+def addAuthor(nome, nacionalidade, data_nascimento, biografia):
+    query = '''
+        INSERT INTO autores(nome, nacionalidade, data_nascimento, biografia) VALUES
+        (%s, %s, %s, %s)
+
+    '''
+    params = (nome, nacionalidade, data_nascimento, biografia)
+
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute(query, params)
+        cur.close()     
+
+def addBook(titulo, autor_id, isbn, ano_publicacao, genero_id, editora_id, quantidade_disponivel, resumo):
+    query = '''
+        INSERT INTO livros(titulo, autor_id, isbn, ano_publicacao, genero_id, editora_id, quantidade_disponivel, resumo) VALUES
+        (%s, %s, %s, %s, %s, %s, %s, %s)
+
+    '''
+    params = (titulo, autor_id, isbn, ano_publicacao, genero_id, editora_id, quantidade_disponivel, resumo)
+
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute(query, params)
+        cur.close()
+
+def addPublisher(nome, endereco):
+    query = '''
+        INSERT INTO editoras(nome, endereco) VALUES
+        (%s, %s)
+
+    '''
+    params = (nome, endereco)
+
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute(query, params)
+        cur.close()
