@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block main %}
+{% for autor in autores %}
+<div class="livros">
+    <h3>{{ autor["nome_autor"] }}</h3>
+    <p>Nacionalidade: {{ autor["nacionalidade"] }}</p>
+    <p>Data de nascimento: {{ autor["data_nascimento"] }}</p>
+    <p>Biografia: {{ autor["biografia"] }}</p>
+</div>
+{% endif %}
+{% endfor %}
+{% endblock main %}

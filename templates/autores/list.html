@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block main %}
+{% for editora in editoras %}
+<div class="livros">
+    <h3>{{ editora["nome_editora"] }}</h3>
+    <p>Endereço: {{ editora["endereco_editora"] }}</p>
+</div>
+{% endif %}
+{% endfor %}
+{% endblock main %}
