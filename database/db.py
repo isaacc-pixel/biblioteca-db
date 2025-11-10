@@ -225,6 +225,18 @@ def addAuthor(nome, nacionalidade, data_nascimento, biografia):
         cur.execute(query, params)
         cur.close()     
 
+def getAuthors():
+    query = '''SELECT * FROM autores'''
+
+    with connect() as conn:
+        cur = conn.cursor()
+
+        cur.execute(query)
+        results = cur.fetchall()
+        
+        cur.close()     
+    return results
+
 def addBook(titulo, autor_id, isbn, ano_publicacao, genero_id, editora_id, quantidade_disponivel, resumo):
     query = '''
         INSERT INTO livros(titulo, autor_id, isbn, ano_publicacao, genero_id, editora_id, quantidade_disponivel, resumo) VALUES
@@ -250,3 +262,15 @@ def addPublisher(nome, endereco):
         cur = conn.cursor()
         cur.execute(query, params)
         cur.close()
+
+def getPublishers():
+    query = '''SELECT * FROM editoras'''
+
+    with connect() as conn:
+        cur = conn.cursor()
+
+        cur.execute(query)
+        results = cur.fetchall()
+        
+        cur.close()     
+    return results
