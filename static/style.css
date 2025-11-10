@@ -145,3 +145,90 @@ footer {
     padding: 15px;
     margin-top: 40px;
 }
+
+.btn-emprestar {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #C1A782;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.btn-emprestar:hover {
+    background-color: #9b8668;
+    transform: scale(1.05);
+}
+.msg.success {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 20px auto;
+    width: fit-content;
+}
+
+
+
+/* MODAL - sempre acima de tudo */
+.modal {
+    position: fixed;      /* FICA POR CIMA, NÃO AFETA OS OUTROS ELEMENTOS */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+
+    background: rgba(0,0,0,0.6);
+
+    display: none;        /* inicialmente invisível */
+    justify-content: center;
+    align-items: center;
+
+    z-index: 9999;        /* garante que fica acima de qualquer outra div */
+}
+
+/* Quando aberto via :target */
+.modal:target {
+    display: flex;
+}
+
+/* Caixa central */
+.modal-content {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    max-width: 380px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.30);
+}
+
+/* Botões */
+.modal-botoes {
+    margin-top: 18px;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+}
+
+.modal .confirmar,
+.modal .cancelar {
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+}
+
+.modal .confirmar {
+    background: #4CAF50;
+}
+
+.modal .cancelar {
+    background: #E74C3C;
+}
+

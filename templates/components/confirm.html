@@ -1,0 +1,11 @@
+{% with mensagens = get_flashed_messages(with_categories=true) %}
+    {% if mensagens %}
+    <div class="mensagens">
+        {% for categoria, mensagem in mensagens %}
+        <div class="msg {{ categoria }}">
+            {{ mensagem }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endwith %}

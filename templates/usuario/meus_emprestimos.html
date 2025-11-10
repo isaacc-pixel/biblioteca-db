@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 {% block main %}
+
+{% include "components/confirm.html" %}
 {% for emprestimo in emprestimos %}
 <div class="livros">
     <h3>{{ emprestimo["titulo"] }}</h3>
@@ -10,8 +12,20 @@
     <p>Data de devolução: {{ emprestimo["data_devolucao_real"] }}</p>
     {% else %}
     <p>Data de devolução prevista: {{ emprestimo["data_devolucao_prevista"] }}</p>
-    <a href="{{ url_for('devolver_livro', emprestimo_id=emprestimo['id_emprestimo']) }}"><button>Devolver livro</button></a>
+    <a href="#modal-{{ url_for('devolver_livro', emprestimo_id=emprestimo['id_emprestimo']) }}" class="btn-emprestar">Devolver livro</a>
+
     {% endif %}
+</div>
+
+<div id="modal-{{ url_for('devolver_livro', emprestimo_id=emprestimo['id_emprestimo']) }}" class="modal">
+    <div class="modal-content">
+    <h3>Confirmar Empréstimo</h3>
+    <p>Você realmente deseja realizar o empréstimo deste livro?</p>
+    <div class="modal-botoes">
+        <a href="{{ url_for('devolver_livro', emprestimo_id=emprestimo['id_emprestimo']) }}" class="confirmar">Confirmar</a>
+        <a href="#!" class="cancelar">Cancelar</a>
+    </div>
+    </div>
 </div>
 {% endfor %}
 {% endblock main %}

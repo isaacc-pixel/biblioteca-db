@@ -1,17 +1,30 @@
 {% extends "base.html" %}
 
 {% block main %}
-{% for livro in livros %}
-{% if livro["quantidade_disponivel"] > 0 and livro["id_livro"] not in nao_exibir%}
-<div class="livros">
-    <h3>{{ livro["titulo"] }}</h3>
-    <p>{{ livro["resumo"] }}</p>
-    <p>Gênero: {{ livro["nome_genero"] }}</p>
-    <p>Autor: {{ livro["nome_autor"] }}</p>
-    <p>Editora: {{ livro["nome_editora"] }}</p>
-    <p>Ano de publicação: {{ livro["ano_publicacao"] }}</p>
-    <a href="{{ url_for('pegar_livro', livro_id=livro['id_livro']) }}"><button>Realizar empréstimo</button></a>
-</div>
-{% endif %}
-{% endfor %}
+    {% include "components/confirm.html" %}
+
+    {% for livro in livros %}
+        {% if livro["quantidade_disponivel"] > 0 and livro["id_livro"] not in nao_exibir %}
+            <div class="livros">
+                <h3>{{ livro["titulo"] }}</h3>
+                <p>{{ livro["resumo"] }}</p>
+                <p>Gênero: {{ livro["nome_genero"] }}</p>
+                <p>Autor: {{ livro["nome_autor"] }}</p>
+                <p>Editora: {{ livro["nome_editora"] }}</p>
+                <p>Ano de publicação: {{ livro["ano_publicacao"] }}</p>
+                <a href="#modal-{{ livro['id_livro'] }}" class="btn-emprestar">Realizar empréstimo</a>
+            </div>
+
+            <div id="modal-{{ livro['id_livro'] }}" class="modal">
+                <div class="modal-content">
+                <h3>Confirmar Empréstimo</h3>
+                <p>Você realmente deseja realizar o empréstimo deste livro?</p>
+                <div class="modal-botoes">
+                    <a href="{{ url_for('pegar_livro', livro_id=livro['id_livro']) }}" class="confirmar">Confirmar</a>
+                    <a href="#!" class="cancelar">Cancelar</a>
+                </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
 {% endblock main %}
