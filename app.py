@@ -110,7 +110,10 @@ def login():
 
         if user is not None:
             if check_password_hash(user["senha_hash"], senha):
-                login_user(User(user["id_usuario"], user["nome_usuario"], user['admin']))
+                login_user(
+                    User(user["id_usuario"],
+                         user["nome_usuario"], user["admin"])
+                )
             return redirect(url_for("index"))
         flash("Email ou senha incorreta", "error")
 
@@ -123,69 +126,138 @@ def logout():
     logout_user()
     return redirect(url_for("index"))
 
-@app.route('/autor/add', methods=["GET", "POST"])
+
+@app.route("/autor/add", methods=["GET", "POST"])
 @login_required
 def adicionar_autor():
     print(current_user.admin)
     if request.method == "POST":
         if current_user.admin == 1:
-            nome = request.form.get('nome')
-            nacionalidade = request.form.get('nacionalidade')
-            data_nascimento = request.form.get('data_nascimento')
-            biografia = request.form.get('biografia')
+            nome = request.form.get("nome")
+            nacionalidade = request.form.get("nacionalidade")
+            data_nascimento = request.form.get("data_nascimento")
+            biografia = request.form.get("biografia")
             if nome:
                 print(data_nascimento)
                 addAuthor(nome, nacionalidade, data_nascimento, biografia)
-                return redirect(url_for('livros')) # levar pra pra página de autores
+                # levar pra pra página de autores
+                return redirect(url_for("livros"))
             flash("Nome não pode estar vazio")
-    
-    return(render_template('autores/add.html'))
 
-@app.route('/editora/add', methods=["GET", "POST"])
+    return render_template("autores/add.html")
+
+
+@app.route("/editora/add", methods=["GET", "POST"])
 @login_required
 def adicionar_editora():
-    if request.method == 'POST':
+    if request.method == "POST":
         if current_user.admin == 1:
-            nome_editora = request.form.get('nome_editora')
-            endereco_editora = request.form.get('endereco')
+            nome_editora = request.form.get("nome_editora")
+            endereco_editora = request.form.get("endereco")
             if nome_editora:
                 addPublisher(nome_editora, endereco_editora)
-                return redirect(url_for('livros'))
+                return redirect(url_for("livros"))
             flash("Nome não pode estar vazio")
-    
-    return(render_template('/editoras/add.html'))
 
-@app.route('/livro/add')
+    return render_template("/editoras/add.html")
+
+
+@app.route("/livro/add")
 @login_required
 def adicionar_livro():
     if request.method == "POST":
         if current_user.admin == 1:
-            titulo = request.form.get('titulo')
-            autor_id = request.form.get('autor')
-            isbn = request.form.get('isbn')
-            ano_publicacao = request.form.get('ano_publicacao')
-            genero_id = request.form.get('genero_id')
-            editora_id = request.form.get('editora_id')
-            quantidade_disponivel = request.form.get('quantidade_disponivel')
-            resumo = request.form.get('resumo')
+            titulo = request.form.get("titulo")
+            autor_id = request.form.get("autor")
+            isbn = request.form.get("isbn")
+            ano_publicacao = request.form.get("ano_publicacao")
+            genero_id = request.form.get("genero_id")
+            editora_id = request.form.get("editora_id")
+            quantidade_disponivel = request.form.get("quantidade_disponivel")
+            resumo = request.form.get("resumo")
 
-            if titulo and autor_id and isbn and genero_id and editora_id and quantidade_disponivel:
+            if (
+                titulo
+                and autor_id
+                and isbn
+                and genero_id
+                and editora_id
+                and quantidade_disponivel
+            ):
                 addBook(nome, nacionalidade, data_nascimento, biografia)
-                return redirect(url_for('livros'))
+                return redirect(url_for("livros"))
             flash("Nome não pode estar vazio")
-        
-    return(render_template('livros/add.html'))
 
-@app.route('/autores')
+    return render_template("livros/add.html")
+
+
+@app.route("/autores")
 def autores():
     autores = getAuthors()
     return render_template("autores/list.html", autores=autores)
 
 
-@app.route('/editoras')
+@app.route("/editoras")
 def editoras():
     editoras = getPublishers()
     return render_template("editoras/list.html", editoras=editoras)
+
+
+@app.route("/autor/update", methods=["GET", "POST"])
+@login_required
+def update_autor():
+    if request.method == "POST":
+        if current_user.admin == 1:
+            nome = request.form.get("nome")
+            nacionalidade = request.form.get("nacionalidade")
+            data_nascimento = request.form.get("data_nascimento")
+            biografia = request.form.get("biografia")
+            updateAuthor(nome, nacionalidade, data_nascimento, biografia)
+            return redirect("autores")
+
+    return render_template("autores/update.html")
+
+
+@app.route("/editora/update", methods=["GET", "POST"])
+@login_required
+def update_editora():
+    if request.method == "POST":
+        if current_user.admin == 1:
+            nome_editora = request.form.get("nome_editora")
+            endereco = request.form.get("endereco")
+            updatePublisher(nome_editora, endereco)
+            return redirect("editoras")
+
+    return render_template("editoras/update.html")
+
+
+@app.route("/livro/update", methods=["GET", "POST"])
+@login_required
+def update_livro():
+    if request.method == "POST":
+        if current_user.admin == 1:
+            titulo = request.form.get("titulo")
+            autor_id = request.form.get("autor")
+            isbn = request.form.get("isbn")
+            ano_publicacao = request.form.get("ano_publicacao")
+            genero_id = request.form.get("genero_id")
+            editora_id = request.form.get("editora_id")
+            quantidade_disponivel = request.form.get("quantidade_disponivel")
+            resumo = request.form.get("resumo")
+
+            updateBook(
+                titulo,
+                autor_id,
+                isbn,
+                ano_publicacao,
+                genero_id,
+                editora_id,
+                quantidade_disponivel,
+                resumo,
+            )
+            return redirect("livros")
+
+    return render_template("livros/update.html")
 
 
 if __name__ == "__main__":
