@@ -1,4 +1,4 @@
-import mysql.connector 
+import mysql.connector
 from datetime import date
 from database.config import USER, HOST, PORT, DATABASE, PASSWORD, SQL_BASE, SQL_INSERTS
 from werkzeug.security import generate_password_hash
@@ -6,14 +6,10 @@ from werkzeug.security import generate_password_hash
 
 def connect() -> mysql.connector.MySQLConnection:
     conn = mysql.connector.connect(
-        user=USER, 
-        host=HOST, 
-        port=PORT, 
-        database=DATABASE,
-        password=PASSWORD
+        user=USER, host=HOST, port=PORT, database=DATABASE, password=PASSWORD
     )
 
-    return conn 
+    return conn
 
 
 def initDB():
@@ -22,14 +18,11 @@ def initDB():
         conn.close()
     except:
         conn = mysql.connector.connect(
-            user=USER, 
-            host=HOST, 
-            port=PORT,
-            password=PASSWORD
+            user=USER, host=HOST, port=PORT, password=PASSWORD
         )
 
         cur = conn.cursor()
-        with open(SQL_BASE, 'r') as base:
+        with open(SQL_BASE, "r") as base:
             cur.execute(base.read())
         cur.close()
 
@@ -39,26 +32,28 @@ def initDB():
         initBooks()
         addUser(nome='admin', email='admin@admin', senha_hash=pswd_hash, admin=True)
 
+
 def initBooks():
     conn = connect()
     cur = conn.cursor()
 
-    with open(SQL_INSERTS, 'r', encoding='utf-8') as inserts:
+    with open(SQL_INSERTS, "r", encoding="utf-8") as inserts:
         sql = inserts.read()
 
-    for query in sql.split(';'):
+    for query in sql.split(";"):
         # print('+'*40)
         # print(query)
         # print(query.strip())
         if query.strip():
             cur.execute(query.strip())
-            
+
     conn.commit()
     cur.close()
     conn.close()
 
+
 def getBooks():
-    query = '''
+    query = """
         SELECT 
             l.*,
             g.nome_genero,
@@ -71,13 +66,14 @@ def getBooks():
             ON l.autor_id = a.id_autor
         INNER JOIN editoras e
             ON l.editora_id = e.id_editora
-    '''
+    """
     with connect() as conn:
         cur = conn.cursor(dictionary=True)
         cur.execute(query)
         livros = cur.fetchall()
         cur.close()
     return livros
+
 
 def addUserBook(user_id, book_id):
     user_id = int(user_id)
@@ -86,13 +82,19 @@ def addUserBook(user_id, book_id):
     data_emprestimo = date.today()
 
     if data_emprestimo.day + 7 > 31:
-        devolucao_prevista = date(data_emprestimo.year, data_emprestimo.month+1, data_emprestimo.day+7-31)
+        devolucao_prevista = date(
+            data_emprestimo.year,
+            data_emprestimo.month + 1,
+            data_emprestimo.day + 7 - 31,
+        )
     else:
-        devolucao_prevista = date(data_emprestimo.year, data_emprestimo.month, data_emprestimo.day + 7)
+        devolucao_prevista = date(
+            data_emprestimo.year, data_emprestimo.month, data_emprestimo.day + 7
+        )
 
     data_emprestimo = data_emprestimo
 
-    query = '''
+    query = """
         INSERT INTO emprestimos (usuario_id, livro_id, data_emprestimo, data_devolucao_prevista, status_emprestimo) 
         VALUES(
             %s,
@@ -101,15 +103,18 @@ def addUserBook(user_id, book_id):
             %s,
             %s
         )
-    '''
+    """
     with connect() as conn:
         cur = conn.cursor()
-        cur.execute(query, (user_id, book_id, data_emprestimo, devolucao_prevista, 'pendente'))
+        cur.execute(
+            query, (user_id, book_id, data_emprestimo, devolucao_prevista, "pendente")
+        )
         conn.commit()
         cur.close()
 
+
 def getUserBooks(user_id):
-    query = '''
+    query = """
         SELECT 
             l.*,
             ep.*,
@@ -130,7 +135,7 @@ def getUserBooks(user_id):
             ON l.editora_id = e.id_editora
         WHERE u.id_usuario = %s
         ORDER BY FIELD(status_emprestimo, 'atrasado', 'pendente','devolvido')
-    '''
+    """
     with connect() as conn:
         cur = conn.cursor(dictionary=True)
         cur.execute(query, (user_id,))
@@ -138,17 +143,18 @@ def getUserBooks(user_id):
         cur.close()
     return livros
 
+
 def returnBook(emprestimo_id):
     # depois fazer adicionar na multa se estiver atrasado
     data_devolucao = date.today()
 
-    query = '''
+    query = """
         UPDATE emprestimos
         SET 
             status_emprestimo='devolvido',
             data_devolucao_real=%s
         WHERE id_emprestimo=%s
-    '''
+    """
 
     with connect() as conn:
         cur = conn.cursor()
@@ -161,11 +167,11 @@ def addUser(nome, email, senha_hash, numero = None, admin = False):
     conn = connect()
     cur = conn.cursor()
 
-    adduser = '''
+    adduser = """
         INSERT INTO usuarios (nome_usuario, email, numero_telefone, senha_hash, data_inscricao, admin)
         VALUES (%s, %s, %s, %s, %s, %s)
-    '''
-    
+    """
+
     data = date.today()
 
     usuario = (nome, email, numero, senha_hash, data, admin)
@@ -181,11 +187,11 @@ def getUserById(id):
     conn = connect()
     cur = conn.cursor(dictionary=True)
 
-    query = '''
+    query = """
         SELECT *
         FROM usuarios
         WHERE id_usuario = %s
-    '''
+    """
 
     cur.execute(query, (id,))
     user = cur.fetchone()
@@ -198,12 +204,11 @@ def getUserByEmail(email):
     conn = connect()
     cur = conn.cursor(dictionary=True)
 
-    query = '''
+    query = """
         SELECT *
         FROM usuarios
         WHERE email = %s
-    '''
-    
+    """
 
     cur.execute(query, (email,))
     user = cur.fetchone()
@@ -214,7 +219,7 @@ def getUserByEmail(email):
 
 def addAuthor(nome, nacionalidade, data_nascimento, biografia):
     query = '''
-        INSERT INTO autores(nome, nacionalidade, data_nascimento, biografia) VALUES
+        INSERT INTO autores(nome_autor, nacionalidade, data_nascimento, biografia) VALUES
         (%s, %s, %s, %s)
 
     '''
@@ -223,13 +228,14 @@ def addAuthor(nome, nacionalidade, data_nascimento, biografia):
     with connect() as conn:
         cur = conn.cursor()
         cur.execute(query, params)
+        conn.commit()
         cur.close()     
 
 def getAuthors():
     query = '''SELECT * FROM autores'''
 
     with connect() as conn:
-        cur = conn.cursor()
+        cur = conn.cursor(dictionary=True)
 
         cur.execute(query)
         results = cur.fetchall()
@@ -248,11 +254,12 @@ def addBook(titulo, autor_id, isbn, ano_publicacao, genero_id, editora_id, quant
     with connect() as conn:
         cur = conn.cursor()
         cur.execute(query, params)
+        conn.commit()
         cur.close()
 
 def addPublisher(nome, endereco):
     query = '''
-        INSERT INTO editoras(nome, endereco) VALUES
+        INSERT INTO editoras(nome_editora, endereco_editora) VALUES
         (%s, %s)
 
     '''
@@ -261,13 +268,14 @@ def addPublisher(nome, endereco):
     with connect() as conn:
         cur = conn.cursor()
         cur.execute(query, params)
+        conn.commit()
         cur.close()
 
 def getPublishers():
     query = '''SELECT * FROM editoras'''
 
     with connect() as conn:
-        cur = conn.cursor()
+        cur = conn.cursor(dictionary=True)
 
         cur.execute(query)
         results = cur.fetchall()

@@ -21,9 +21,10 @@ login_manager.login_view = "login"
 
 
 class User(UserMixin):
-    def __init__(self, id, nome):
+    def __init__(self, id, nome, admin):
         self.id = id
         self.nome = nome
+        self.admin = admin
         # self.nome = nome
 
     def get_id(self):
@@ -33,12 +34,13 @@ class User(UserMixin):
 @login_manager.user_loader
 def load_user(id):
     user = getUserById(id)
-    return User(id, user["nome_usuario"])
+    return User(id, user["nome_usuario"], user["admin"])
 
 
 @app.route("/")
 def index():
     return render_template("index.html")
+
 
 @app.route("/livros")
 def livros():
@@ -46,34 +48,37 @@ def livros():
     nao_exibir = []
     if current_user.is_authenticated:
         livros_usuario = getUserBooks(current_user.id)
-        
+
         for livro in livros_usuario:
             if livro["status_emprestimo"] != "devolvido":
                 nao_exibir.append(livro["id_livro"])
 
+    return render_template("livros/list.html", livros=livros, nao_exibir=nao_exibir)
 
-    return render_template('livros/list.html', livros=livros, nao_exibir=nao_exibir)
 
-@app.route('/livros/<livro_id>/emprestimo')
+@app.route("/livros/<livro_id>/emprestimo")
 @login_required
 def pegar_livro(livro_id):
     addUserBook(current_user.id, livro_id)
     flash("📚 Empréstimo realizado com sucesso!", "success")
     return redirect(url_for("livros"))
 
-@app.route('/livros/<emprestimo_id>/devolver')
+
+@app.route("/livros/<emprestimo_id>/devolver")
 @login_required
 def devolver_livro(emprestimo_id):
     returnBook(emprestimo_id)
     flash("📚 Devolução realizada com sucesso!", "success")
     return redirect(url_for("meus_emprestimos"))
 
-@app.route('/meus-emprestimos')
+
+@app.route("/meus-emprestimos")
 @login_required
 def meus_emprestimos():
     emprestimos = getUserBooks(current_user.id)
 
-    return render_template('usuario/meus_emprestimos.html', emprestimos=emprestimos)
+    return render_template("usuario/meus_emprestimos.html", emprestimos=emprestimos)
+
 
 @app.route("/cadastro", methods=["GET", "POST"])
 def cadastro():
@@ -105,7 +110,10 @@ def login():
 
         if user is not None:
             if check_password_hash(user["senha_hash"], senha):
-                login_user(User(user["id_usuario"], user["nome_usuario"]))
+                login_user(
+                    User(user["id_usuario"],
+                         user["nome_usuario"], user["admin"])
+                )
             return redirect(url_for("index"))
         flash("Email ou senha incorreta", "error")
 
@@ -116,6 +124,148 @@ def login():
 @login_required
 def logout():
     logout_user()
+    return redirect(url_for("index"))
+
+
+@app.route("/autor/add", methods=["GET", "POST"])
+@login_required
+def adicionar_autor():
+    print(current_user.admin)
+    if request.method == "POST":
+        if current_user.admin == 1:
+            nome = request.form.get("nome")
+            nacionalidade = request.form.get("nacionalidade")
+            data_nascimento = request.form.get("data_nascimento")
+            biografia = request.form.get("biografia")
+            if nome:
+                print(data_nascimento)
+                addAuthor(nome, nacionalidade, data_nascimento, biografia)
+                # levar pra pra página de autores
+                return redirect(url_for("livros"))
+            flash("Nome não pode estar vazio")
+
+    return render_template("autores/add.html")
+
+
+@app.route("/editora/add", methods=["GET", "POST"])
+@login_required
+def adicionar_editora():
+    if request.method == "POST":
+        if current_user.admin == 1:
+            nome_editora = request.form.get("nome_editora")
+            endereco_editora = request.form.get("endereco")
+            if nome_editora:
+                addPublisher(nome_editora, endereco_editora)
+                return redirect(url_for("livros"))
+            flash("Nome não pode estar vazio")
+
+    return render_template("/editoras/add.html")
+
+
+@app.route("/livro/add")
+@login_required
+def adicionar_livro():
+    if request.method == "POST":
+        if current_user.admin == 1:
+            titulo = request.form.get("titulo")
+            autor_id = request.form.get("autor")
+            isbn = request.form.get("isbn")
+            ano_publicacao = request.form.get("ano_publicacao")
+            genero_id = request.form.get("genero_id")
+            editora_id = request.form.get("editora_id")
+            quantidade_disponivel = request.form.get("quantidade_disponivel")
+            resumo = request.form.get("resumo")
+
+            if (
+                titulo
+                and autor_id
+                and isbn
+                and genero_id
+                and editora_id
+                and quantidade_disponivel
+            ):
+                addBook(nome, nacionalidade, data_nascimento, biografia)
+                return redirect(url_for("livros"))
+            flash("Nome não pode estar vazio")
+
+    return render_template("livros/add.html")
+
+
+@app.route("/autores")
+def autores():
+    autores = getAuthors()
+    return render_template("autores/list.html", autores=autores)
+
+
+@app.route("/editoras")
+def editoras():
+    editoras = getPublishers()
+    return render_template("editoras/list.html", editoras=editoras)
+
+
+@app.route("/autor/update", methods=["GET", "POST"])
+@login_required
+def update_autor():
+    if request.method == "POST":
+        if current_user.admin == 1:
+            nome = request.form.get("nome")
+            nacionalidade = request.form.get("nacionalidade")
+            data_nascimento = request.form.get("data_nascimento")
+            biografia = request.form.get("biografia")
+            updateAuthor(nome, nacionalidade, data_nascimento, biografia)
+            return redirect(url_for("autores"))
+
+    return render_template("autores/update.html")
+
+
+@app.route("/editora/update", methods=["GET", "POST"])
+@login_required
+def update_editora():
+    if request.method == "POST":
+        if current_user.admin == 1:
+            nome_editora = request.form.get("nome_editora")
+            endereco = request.form.get("endereco")
+            updatePublisher(nome_editora, endereco)
+            return redirect(url_for("editoras"))
+
+    return render_template("editoras/update.html")
+
+
+@app.route("/livro/update", methods=["GET", "POST"])
+@login_required
+def update_livro():
+    if request.method == "POST":
+        if current_user.admin == 1:
+            titulo = request.form.get("titulo")
+            autor_id = request.form.get("autor")
+            isbn = request.form.get("isbn")
+            ano_publicacao = request.form.get("ano_publicacao")
+            genero_id = request.form.get("genero_id")
+            editora_id = request.form.get("editora_id")
+            quantidade_disponivel = request.form.get("quantidade_disponivel")
+            resumo = request.form.get("resumo")
+
+            updateBook(
+                titulo,
+                autor_id,
+                isbn,
+                ano_publicacao,
+                genero_id,
+                editora_id,
+                quantidade_disponivel,
+                resumo,
+            )
+            return redirect(url_for("livros"))
+
+    return render_template("livros/update.html")
+
+
+@app.route("/autor/delete/<autor_id>", methods=["POST"])
+@login_required
+def delete_autor(autor_id):
+    if current_user.admin == 1:
+        deleteAuthor(autor_id)
+        return redirect(url_for("autores"))
     return redirect(url_for("index"))
 
 

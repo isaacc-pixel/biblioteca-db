@@ -2,15 +2,21 @@
 
 {% block main %}
 {% if current_user.admin %}
-<form action="{{ url_for('adicionar_editora') }}" method="post">
+<form action="{{ url_for('adicionar_autor') }}" method="post">
     <div class="login">
         <label for="nome">Nome *</label>
         <input type="text" id="nome" name="nome">
 
-        <label for="endereco">Endereço</label>
-        <input type="text" id="endereco" name="endereco">
+        <label for="nacionalidade">Nacionalidade</label>
+        <input type="text" id="nacionalidade" name="nacionalidade">
 
-        <button>Adicionar editora</button>
+        <label for="data">Data de nascimento</label>
+        <input type="date" id="data" name="data_nascimento">
+
+        <label for="biografia">Biografia</label>
+        <textarea type="text" id="biografia" name="biografia"></textarea>
+
+        <button>Adicionar autor</button>
 
         {% include "components/messages.html" %}
     </div>
