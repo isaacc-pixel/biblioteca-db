@@ -338,14 +338,78 @@ def deletePublishers(id):
         conn.commit()
         cur.close()
 
-# def updatePublishers(id, titulo, autor_id, isbn, ano_publicacao, genero_id, editora_id, quantidade_disponivel, resumo):
+
+def getPublisherById(id):
+    conn = connect()
+    cur = conn.cursor(dictionary=True)
+
+    query = """
+        SELECT *
+        FROM editoras
+        WHERE id_editora = %s
+    """
+
+    cur.execute(query, (id,))
+    result = cur.fetchone()
+    cur.close()
+    conn.close()
+    return result
+
+def getAuthorById(id):
+    conn = connect()
+    cur = conn.cursor(dictionary=True)
+
+    query = """
+        SELECT *
+        FROM autores
+        WHERE id_autor = %s
+    """
+
+    cur.execute(query, (id,))
+    result = cur.fetchone()
+    cur.close()
+    conn.close()
+    return result
+
+def getBookById(id):
+    conn = connect()
+    cur = conn.cursor(dictionary=True)
+
+    query = """
+        SELECT *
+        FROM livros
+        WHERE id_livro = %s
+    """
+
+    cur.execute(query, (id,))
+    result = cur.fetchone()
+    cur.close()
+    conn.close()
+    return result
+
+
+# def updatePublishers(id_editora, titulo, autor_id, isbn, ano_publicacao, genero_id, editora_id, quantidade_disponivel, resumo):
 #     query = '''
 #         UPDATE editoras
-#         SET 
+#         SET titulo=%s, autor_id=%s, isbn=%s, ano_publicacao=%s, genero_id=%s, editora_id=%s, quantidade_disponivel=%s, resumo=%s
 #         WHERE id_editora = %s
 #     '''
+    
+#     params = (
+#         titulo, 
+#         autor_id, 
+#         isbn, 
+#         ano_publicacao, 
+#         genero_id, 
+#         editora_id, 
+#         quantidade_disponivel, 
+#         resumo, 
+#         id_editora
+#     )
 
-#     params = (id, titulo, autor_id, isbn, ano_publicacao, genero_id, editora_id, quantidade_disponivel, resumo)
+#     antes = getPublisherById(id_editora)
+
+#     if 
 
 #     with connect() as conn:
 #         cur = conn.cursor()
