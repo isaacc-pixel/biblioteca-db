@@ -282,3 +282,73 @@ def getPublishers():
         
         cur.close()     
     return results
+
+
+def getGenres():
+    query = '''SELECT * FROM generos'''
+
+    with connect() as conn:
+        cur = conn.cursor(dictionary=True)
+
+        cur.execute(query)
+        results = cur.fetchall()
+        
+        cur.close()     
+    return results
+
+def deleteBook(id):
+    query = '''
+        DELETE FROM livros
+        WHERE id_livro = %s
+    '''
+
+    params = (id)
+
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute(query, params)
+        conn.commit()
+        cur.close()
+
+def deleteAuthor(id):
+    query = '''
+        DELETE FROM autores
+        WHERE id_autor = %s
+    '''
+
+    params = (id)
+
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute(query, params)
+        conn.commit()
+        cur.close()
+
+def deletePublishers(id):
+    query = '''
+        DELETE FROM editoras
+        WHERE id_editora = %s
+    '''
+
+    params = (id)
+
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute(query, params)
+        conn.commit()
+        cur.close()
+
+# def updatePublishers(id, titulo, autor_id, isbn, ano_publicacao, genero_id, editora_id, quantidade_disponivel, resumo):
+#     query = '''
+#         UPDATE editoras
+#         SET 
+#         WHERE id_editora = %s
+#     '''
+
+#     params = (id, titulo, autor_id, isbn, ano_publicacao, genero_id, editora_id, quantidade_disponivel, resumo)
+
+#     with connect() as conn:
+#         cur = conn.cursor()
+#         cur.execute(query, params)
+#         conn.commit()
+#         cur.close()
