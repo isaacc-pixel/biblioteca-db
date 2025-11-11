@@ -264,8 +264,32 @@ def update_livro():
 @login_required
 def delete_autor(autor_id):
     if current_user.admin == 1:
+        for livro in getBooks():
+            if autor_id == livro["autor_id"]:
+                return redirect(url_for("autores"))
         deleteAuthor(autor_id)
         return redirect(url_for("autores"))
+    return redirect(url_for("index"))
+
+
+@app.route("/editora/delete/<editora_id>", methods=["POST"])
+@login_required
+def delete_autor(editora_id):
+    if current_user.admin == 1:
+        for livro in getBooks():
+            if editora_id == livro["editora_id"]:
+                return redirect(url_for("editoras"))
+        deletePublisher(editora_id)
+        return redirect(url_for("editoras"))
+    return redirect(url_for("index"))
+
+
+@app.route("/livro/delete/<livro_id>", methods=["POST"])
+@login_required
+def delete_autor(livro_id):
+    if current_user.admin == 1:
+        deleteBook(livro_id)
+        return redirect(url_for("livros"))
     return redirect(url_for("index"))
 
 
