@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block main %}
+{% if current_user.admin %}
+<form action="{{ url_for('adicionar_livro') }}" method="post">
+    <div class="login">
+        <label for="titulo">Titulo</label>
+        <input type="text" id="titulo" name="titulo">
+
+        <label for="autor">Autor</label>
+        <select name="autor">
+            <option selected disabled label="Selecione o autor">
+            {% for autor in autores%}
+                <option value="{{autor['id_autor']}}" label="{{autor['nome_autor']}}">
+            {% endfor %}
+        </select>
+
+        <label for="isbn">ISBN</label>
+        <input type="text" id="isbn" name="isbn">
+
+        <label for="ano_publicacao">Ano de publicação</label>
+        <input type="date" id="ano_publicacao" name="ano_publicacao">
+
+        <label for="genero_id">Genero</label>
+        <select name="genero_id">
+            <option selected disabled label="Selecione o genero">
+            {% for genero in generos%}
+                <option value="{{genero['id_genero']}}" label="{{genero['nome_genero']}}">
+            {% endfor %}
+        </select>
+
+        <label for="editora_id">Editora</label>
+        <select name="editora_id">
+            <option selected disabled label="Selecione a editora">
+            {% for editora in editoras%}
+                <option value="{{editora['id_editora']}}" label="{{editora['nome_editora']}}">
+            {% endfor %}
+        </select>
+
+        <label for="quantidade">Quantidade de Exemplares</label>
+        <input type="number" id="quantidade" name="quantidade_disponivel">
+
+        <label for="resumo">Resumo</label>
+        <textarea type="text" id="resumo" name="resumo"></textarea>
+
+        <button>Adicionar ao acervo</button>
+
+        {% include "components/messages.html" %}
+    </div>
+</form>
+{% else %}
+<h1>VOCÊ NÃO É ADMINISTRADOR, SAIA IMEDIATAMENTE</h1>
+{% endif %}
+{% endblock main %}

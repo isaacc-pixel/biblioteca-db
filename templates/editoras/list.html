@@ -5,6 +5,10 @@
 <div class="livros">
     <h3>{{ editora["nome_editora"] }}</h3>
     <p>Endereço: {{ editora["endereco_editora"] }}</p>
+    <a href="{{ url_for('update_editora', id_editora=editora['id_editora']) }}" class="btn-emprestar">Editar</a>
+    <form action="{{url_for('delete_editora', id_editora=editora['id_editora'])}}" method="POST">
+        <button class="btn-emprestar">Deletar</button>
+    </form>
 </div>
 {% endfor %}
 {% endblock main %}

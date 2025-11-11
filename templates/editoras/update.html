@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block main %}
+{% if current_user.admin %}
+<form action="{{ url_for('update_editora', id_editora=editora['id_editora']) }}" method="post">
+    <div class="login">
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" name="nome_editora" value="{{editora['nome_editora']}}">
+
+        <label for="endereco">Endereço</label>
+        <input type="text" id="endereco" name="endereco" value="{{editora['endereco_editora']}}">
+
+        <button>Atualizar editora</button>
+
+        {% include "components/messages.html" %}
+    </div>
+</form>
+{% else %}
+<h1>VOCÊ NÃO É ADMINISTRADOR, SAIA IMEDIATAMENTE</h1>
+{% endif %}
+{% endblock main %}

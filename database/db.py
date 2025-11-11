@@ -302,7 +302,7 @@ def deleteBook(id):
         WHERE id_livro = %s
     '''
 
-    params = (id)
+    params = (id,)
 
     with connect() as conn:
         cur = conn.cursor()
@@ -316,7 +316,7 @@ def deleteAuthor(id):
         WHERE id_autor = %s
     '''
 
-    params = (id)
+    params = (id,)
 
     with connect() as conn:
         cur = conn.cursor()
@@ -324,13 +324,13 @@ def deleteAuthor(id):
         conn.commit()
         cur.close()
 
-def deletePublishers(id):
+def deletePublisher(id):
     query = '''
         DELETE FROM editoras
         WHERE id_editora = %s
     '''
 
-    params = (id)
+    params = (id,)
 
     with connect() as conn:
         cur = conn.cursor()

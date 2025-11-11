@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block main %}
+{% if current_user.admin %}
+<form action="{{ url_for('update_autor', autor_id=autor['id_autor']) }}" method="post">
+    <div class="login">
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" name="nome" value="{{autor['nome_autor']}}">
+
+        <label for="nacionalidade">Nacionalidade</label>
+        <input type="text" id="nacionalidade" name="nacionalidade" value="{{autor['nacionalidade']}}">
+
+        <label for="data">Data de nascimento</label>
+        <input type="date" id="data" name="data_nascimento" value="{{autor['data_nascimento']}}">
+
+        <label for="biografia">Biografia</label>
+        <textarea type="text" id="biografia" name="biografia">{{autor["biografia"]}}</textarea>
+
+        <button>Atualizar autor</button>
+
+        {% include "components/messages.html" %}
+    </div>
+</form>
+{% else %}
+<h1>VOCÊ NÃO É ADMINISTRADOR, SAIA IMEDIATAMENTE</h1>
+{% endif %}
+{% endblock main %}

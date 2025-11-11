@@ -7,6 +7,10 @@
     <p>Nacionalidade: {{ autor["nacionalidade"] }}</p>
     <p>Data de nascimento: {{ autor["data_nascimento"] }}</p>
     <p>Biografia: {{ autor["biografia"] }}</p>
+    <a href="{{ url_for('update_autor', autor_id=autor['id_autor']) }}" class="btn-emprestar">Editar</a>
+    <form action="{{url_for('delete_autor', autor_id=autor['id_autor'])}}" method="POST">
+        <button class="btn-emprestar">Deletar</button>
+    </form>
 </div>
 {% endfor %}
 {% endblock main %}
