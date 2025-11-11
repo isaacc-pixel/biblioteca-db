@@ -388,31 +388,67 @@ def getBookById(id):
     return result
 
 
-# def updatePublishers(id_editora, titulo, autor_id, isbn, ano_publicacao, genero_id, editora_id, quantidade_disponivel, resumo):
-#     query = '''
-#         UPDATE editoras
-#         SET titulo=%s, autor_id=%s, isbn=%s, ano_publicacao=%s, genero_id=%s, editora_id=%s, quantidade_disponivel=%s, resumo=%s
-#         WHERE id_editora = %s
-#     '''
+def updateBook(id_livro, titulo, autor_id, isbn, ano_publicacao, genero_id, editora_id, quantidade_disponivel, resumo):
+    query = '''
+        UPDATE livros
+        SET titulo=%s, autor_id=%s, isbn=%s, ano_publicacao=%s, genero_id=%s, editora_id=%s, quantidade_disponivel=%s, resumo=%s
+        WHERE id_livro = %s
+    '''
     
-#     params = (
-#         titulo, 
-#         autor_id, 
-#         isbn, 
-#         ano_publicacao, 
-#         genero_id, 
-#         editora_id, 
-#         quantidade_disponivel, 
-#         resumo, 
-#         id_editora
-#     )
+    params = (
+        titulo, 
+        autor_id, 
+        isbn, 
+        ano_publicacao, 
+        genero_id, 
+        editora_id, 
+        quantidade_disponivel, 
+        resumo, 
+        id_livro
+    )
 
-#     antes = getPublisherById(id_editora)
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute(query, params)
+        conn.commit()
+        cur.close()
 
-#     if 
+def updateAuthor(id_autor, nome_autor, nacionalidade, data_nascimento, biografia):
+    query = '''
+        UPDATE autores
+        SET nome_autor=%s, nacionalidade=%s, data_nascimento=%s, biografia=%s
+        WHERE id_autor = %s
+    '''
+    
+    params = (
+        nome_autor,
+        nacionalidade, 
+        data_nascimento, 
+        biografia,
+        id_autor
+    )
 
-#     with connect() as conn:
-#         cur = conn.cursor()
-#         cur.execute(query, params)
-#         conn.commit()
-#         cur.close()
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute(query, params)
+        conn.commit()
+        cur.close()
+
+def updatePublisher(id_editora, nome_editora, endereco_editora):
+    query = '''
+        UPDATE editoras
+        SET nome_editora=%s, endereco_editora=%s
+        WHERE id_editora = %s
+    '''
+    
+    params = (
+        nome_editora, 
+        endereco_editora,
+        id_editora
+    )
+
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute(query, params)
+        conn.commit()
+        cur.close()
