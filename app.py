@@ -234,9 +234,9 @@ def update_editora(id_editora):
     return render_template("editoras/update.html", editora=editora)
 
 
-@app.route("/livro/update", methods=["GET", "POST"])
+@app.route("/livro/update/<id_livro>", methods=["GET", "POST"])
 @login_required
-def update_livro():
+def update_livro(id_livro):
     if request.method == "POST":
         if current_user.admin == 1:
             titulo = request.form.get("titulo")
@@ -248,19 +248,23 @@ def update_livro():
             quantidade_disponivel = request.form.get("quantidade_disponivel")
             resumo = request.form.get("resumo")
 
-            # updateBook(
-            #     titulo,
-            #     autor_id,
-            #     isbn,
-            #     ano_publicacao,
-            #     genero_id,
-            #     editora_id,
-            #     quantidade_disponivel,
-            #     resumo,
-            # )
+            updateBook(
+                id_livro,
+                titulo,
+                autor_id,
+                isbn,
+                ano_publicacao,
+                genero_id,
+                editora_id,
+                quantidade_disponivel,
+                resumo,
+            )
             return redirect(url_for("livros"))
 
-    return render_template("livros/update.html")
+    livro = getBookById(id_livro)
+    autor = getAuthors()
+    editoras = getPublishers()
+    return render_template("livros/update.html", livro=livro, autor=autor, editoras=editoras)
 
 
 @app.route("/autor/delete/<autor_id>", methods=["POST"])

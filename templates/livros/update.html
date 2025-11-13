@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block main %}
+{% if current_user.admin %}
+<form action="{{ url_for('adicionar_livro') }}" method="post">
+    <div class="login">
+        <label for="titulo">Titulo</label>
+        <input type="text" id="titulo" name="titulo" value="{{ livro['titulo'] }}" >
+
+        <label for="autor">Autor</label>
+        <select name="autor">
+            {% for autor in autores%}
+                {% if autor['id_autor'] == livro['autor_id']%}
+                    <option value="{{autor['id_autor']}}" label="{{autor['nome_autor']}}" selected>
+                {% else %}
+                    <option value="{{autor['id_autor']}}" label="{{autor['nome_autor']}}">
+                {% endif %}
+            {% endfor %}
+        </select>
+
+        <label for="isbn">ISBN</label>
+        <input type="text" id="isbn" name="isbn" value="{{ livro['isbn'] }}">
+
+        <label for="ano_publicacao">Ano de publicação</label>
+        <input type="date" id="ano_publicacao" name="ano_publicacao" value="{{ livro['ano_publicacao'] }}">
+
+        <label for="genero_id">Genero</label>
+        <select name="genero_id">
+            {% for genero in generos%}
+                {% if genero['id_genero'] == livro['genero_id'] %}
+                    <option value="{{genero['id_genero']}}" label="{{genero['nome_genero']}}" selected>
+                {% else %}
+                    <option value="{{genero['id_genero']}}" label="{{genero['nome_genero']}}">
+                {% endif %}
+            {% endfor %}
+        </select>
+
+        <label for="editora_id">Editora</label>
+        <select name="editora_id">
+            {% for editora in editoras%}
+                {% if editora['id_editora'] == livro['editora_id'] %}
+                    <option value="{{editora['id_editora']}}" label="{{editora['nome_editora']}}" selected>
+                {% else %}
+                    <option value="{{editora['id_editora']}}" label="{{editora['nome_editora']}}">
+                {% endif %}
+            {% endfor %}
+        </select>
+
+        <label for="quantidade">Quantidade de Exemplares</label>
+        <input type="number" id="quantidade" name="quantidade_disponivel" value="{{ livro['quantidade_disponivel'] }}">
+
+        <label for="resumo">Resumo</label>
+        <textarea type="text" id="resumo" name="resumo">{{ livro['resumo'] }}</textarea>
+
+        <button>Adicionar ao acervo</button>
+
+        {% include "components/messages.html" %}
+    </div>
+</form>
+{% else %}
+<h1>VOCÊ NÃO É ADMINISTRADOR, SAIA IMEDIATAMENTE</h1>
+{% endif %}
+{% endblock main %}
