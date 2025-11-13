@@ -262,9 +262,10 @@ def update_livro(id_livro):
             return redirect(url_for("livros"))
 
     livro = getBookById(id_livro)
-    autor = getAuthors()
+    autores = getAuthors()
     editoras = getPublishers()
-    return render_template("livros/update.html", livro=livro, autor=autor, editoras=editoras)
+    generos = getGenres()
+    return render_template("livros/update.html", livro=livro, autores=autores, editoras=editoras, generos=generos)
 
 
 @app.route("/autor/delete/<autor_id>", methods=["POST"])
