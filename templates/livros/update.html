@@ -2,7 +2,7 @@
 
 {% block main %}
 {% if current_user.admin %}
-<form action="{{ url_for('adicionar_livro') }}" method="post">
+<form action="{{ url_for('update_livro', livro_id=livro['id_livro']) }}" method="post">
     <div class="login">
         <label for="titulo">Titulo</label>
         <input type="text" id="titulo" name="titulo" value="{{ livro['titulo'] }}" >
@@ -52,12 +52,12 @@
         <label for="resumo">Resumo</label>
         <textarea type="text" id="resumo" name="resumo">{{ livro['resumo'] }}</textarea>
 
-        <button>Adicionar ao acervo</button>
+        <button>Atualizar livro</button>
 
         {% include "components/messages.html" %}
     </div>
 </form>
 {% else %}
-<h1>VOCÊ NÃO É ADMINISTRADOR, SAIA IMEDIATAMENTE</h1>
+<h1 class="livros">VOCÊ NÃO É ADMINISTRADOR, SAIA IMEDIATAMENTE</h1>
 {% endif %}
 {% endblock main %}

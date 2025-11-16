@@ -1,16 +1,24 @@
 {% extends "base.html" %}
 
 {% block main %}
+{% include "components/confirm.html" %}
+
+{% if current_user.admin == 1 %}
+<div class="livros">
+    <a href="{{ url_for('adicionar_editora') }}" class="btn-emprestar" style="width: 100%;">ADICIONAR EDITORA</a>
+</div>
+{% endif %}
+
 {% for editora in editoras %}
 <div class="livros">
     <h3>{{ editora["nome_editora"] }}</h3>
     <p>Endereço: {{ editora["endereco_editora"] }}</p>
-    {{ if current_user.admin == 1}}
-    <a href="{{ url_for('update_editora', id_editora=editora['id_editora']) }}" class="btn-emprestar">Editar</a>
+    {% if current_user.admin == 1 %}
     <form action="{{url_for('delete_editora', id_editora=editora['id_editora'])}}" method="POST">
+        <a href="{{ url_for('update_editora', id_editora=editora['id_editora']) }}" class="btn-emprestar">Editar</a>
         <button class="btn-emprestar">Deletar</button>
     </form>
-    { endif }
+    {% endif %}
 </div>
 {% endfor %}
 {% endblock main %}

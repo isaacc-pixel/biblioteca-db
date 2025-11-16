@@ -162,14 +162,21 @@ footer {
     background-color: #9b8668;
     transform: scale(1.05);
 }
-.msg.success {
-    background-color: #4CAF50;
+.msg {
     color: white;
     padding: 15px 25px;
     border-radius: 10px;
     text-align: center;
     margin: 20px auto;
     width: fit-content;
+}
+
+.success{
+    background-color: #4CAF50;
+}
+
+.error{
+    background-color: #af4c4c;
 }
 
 

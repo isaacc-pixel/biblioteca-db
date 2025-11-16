@@ -3,6 +3,12 @@
 {% block main %}
     {% include "components/confirm.html" %}
 
+    {% if current_user.admin == 1 %}
+    <div class="livros">
+        <a href="{{ url_for('adicionar_livro') }}" class="btn-emprestar" style="width: 100%;">ADICIONAR LIVRO</a>
+    </div>
+    {% endif %}
+
     {% for livro in livros %}
         {% if livro["quantidade_disponivel"] > 0 and livro["id_livro"] not in nao_exibir %}
             <div class="livros">
@@ -13,10 +19,12 @@
                 <p>Editora: {{ livro["nome_editora"] }}</p>
                 <p>Ano de publicação: {{ livro["ano_publicacao"] }}</p>
                 <a href="#modal-{{ livro['id_livro'] }}" class="btn-emprestar">Realizar empréstimo</a>
-                <a href="{{url_for('update_livro', livro_id=livro['id_livro']}}" class="btn-emprestar">Atualizar livro</a>
-                <form action="{{url_for('delete_livro', livro_id=livro['id_livro'])}}" method="POST">
+                {% if current_user.admin == 1 %}
+                <form action="{{ url_for('delete_livro', livro_id=livro['id_livro']) }}" method="POST">
+                    <a href="{{ url_for('update_livro', livro_id=livro['id_livro']) }}" class="btn-emprestar">Atualizar livro</a>
                     <button type="submit" class="btn-emprestar">Deletar</button>
                 </form>
+                {% endif %}
             </div>
 
             <div id="modal-{{ livro['id_livro'] }}" class="modal">

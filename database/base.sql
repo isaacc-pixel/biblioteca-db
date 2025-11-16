@@ -54,6 +54,6 @@ CREATE TABLE emprestimos (
     data_devolucao_prevista DATE NOT NULL,
     data_devolucao_real DATE,
     status_emprestimo ENUM('pendente', 'devolvido', 'atrasado') NOT NULL,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id_usuario),
-    FOREIGN KEY (livro_id) REFERENCES livros(id_livro)
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (livro_id) REFERENCES livros(id_livro) ON DELETE CASCADE
 );

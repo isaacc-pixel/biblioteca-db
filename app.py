@@ -130,7 +130,6 @@ def logout():
 @app.route("/autor/add", methods=["GET", "POST"])
 @login_required
 def adicionar_autor():
-    print(current_user.admin)
     if request.method == "POST":
         if current_user.admin == 1:
             nome = request.form.get("nome")
@@ -140,8 +139,8 @@ def adicionar_autor():
             if nome:
                 print(data_nascimento)
                 addAuthor(nome, nacionalidade, data_nascimento, biografia)
-                # levar pra pra página de autores
-                return redirect(url_for("livros"))
+                flash('Autor adicionado com sucesso', 'success')
+                return redirect(url_for("autores"))
             flash("Nome não pode estar vazio")
 
     return render_template("autores/add.html")
@@ -156,7 +155,9 @@ def adicionar_editora():
             endereco_editora = request.form.get("endereco")
             if nome_editora:
                 addPublisher(nome_editora, endereco_editora)
-                return redirect(url_for("livros"))
+                flash('Editora adicionada com sucesso', 'success')
+
+                return redirect(url_for("editoras"))
             flash("Nome não pode estar vazio")
 
     return render_template("/editoras/add.html")
@@ -185,6 +186,8 @@ def adicionar_livro():
                 and quantidade_disponivel
             ):
                 addBook(titulo, autor_id, isbn, ano_publicacao, genero_id, editora_id, quantidade_disponivel, resumo)
+                flash('Livro adicionado com sucesso', 'success')
+
                 return redirect(url_for("livros"))
             flash("Nome não pode estar vazio")
     generos = getGenres()
@@ -215,6 +218,8 @@ def update_autor(autor_id):
             data_nascimento = request.form.get("data_nascimento")
             biografia = request.form.get("biografia")
             updateAuthor(autor_id, nome, nacionalidade, data_nascimento, biografia)
+            flash('Autor atualizado com sucesso', 'success')
+
             return redirect(url_for("autores"))
     autor = getAuthorById(autor_id)
     return render_template("autores/update.html", autor=autor)
@@ -229,14 +234,16 @@ def update_editora(id_editora):
             nome_editora = request.form.get("nome_editora")
             endereco = request.form.get("endereco")
             updatePublisher(id_editora, nome_editora, endereco)
+            flash('Editora atualizada com sucesso', 'success')
+
             return redirect(url_for("editoras"))
 
     return render_template("editoras/update.html", editora=editora)
 
 
-@app.route("/livro/update/<id_livro>", methods=["GET", "POST"])
+@app.route("/livro/update/<livro_id>", methods=["GET", "POST"])
 @login_required
-def update_livro(id_livro):
+def update_livro(livro_id):
     if request.method == "POST":
         if current_user.admin == 1:
             titulo = request.form.get("titulo")
@@ -249,7 +256,7 @@ def update_livro(id_livro):
             resumo = request.form.get("resumo")
 
             updateBook(
-                id_livro,
+                livro_id,
                 titulo,
                 autor_id,
                 isbn,
@@ -259,35 +266,39 @@ def update_livro(id_livro):
                 quantidade_disponivel,
                 resumo,
             )
+            flash('Livro atualizado com sucesso', 'success')
             return redirect(url_for("livros"))
 
-    livro = getBookById(id_livro)
+    livro = getBookById(livro_id)
     autores = getAuthors()
     editoras = getPublishers()
     generos = getGenres()
     return render_template("livros/update.html", livro=livro, autores=autores, editoras=editoras, generos=generos)
 
 
-@app.route("/autor/delete/<autor_id>", methods=["POST"])
+@app.route("/autor/delete/<int:autor_id>", methods=["POST"])
 @login_required
 def delete_autor(autor_id):
     if current_user.admin == 1:
         for livro in getBooks():
             if autor_id == livro["autor_id"]:
+                flash('Delete os livros relacionados antes de deletar este autor', 'error')
                 return redirect(url_for("autores"))
         deleteAuthor(autor_id)
+        flash('Autor deletado com sucesso', 'success')
         return redirect(url_for("autores"))
     return redirect(url_for("index"))
 
-
-@app.route("/editora/delete/<id_editora>", methods=["POST"])
+@app.route("/editora/delete/<int:id_editora>", methods=["POST"])
 @login_required
 def delete_editora(id_editora):
     if current_user.admin == 1:
         for livro in getBooks():
-            if int(id_editora) == int(livro["editora_id"]):
+            if id_editora == livro["editora_id"]:
+                flash('Delete os livros relacionados antes de deletar esta editora', 'error')
                 return redirect(url_for("editoras"))
         deletePublisher(id_editora)
+        flash('Editora deletada com sucesso', 'success')
         return redirect(url_for("editoras"))
     return redirect(url_for("index"))
 
@@ -297,6 +308,7 @@ def delete_editora(id_editora):
 def delete_livro(livro_id):
     if current_user.admin == 1:
         deleteBook(livro_id)
+        flash('Livro deletado com sucesso', 'success')
         return redirect(url_for("livros"))
     return redirect(url_for("index"))
 
