@@ -143,6 +143,18 @@ def getUserBooks(user_id):
         cur.close()
     return livros
 
+def getEmprestimos():
+    query = """
+        SELECT 
+            *
+        FROM emprestimos
+    """
+    with connect() as conn:
+        cur = conn.cursor(dictionary=True)
+        cur.execute(query)
+        livros = cur.fetchall()
+        cur.close()
+    return livros
 
 def returnBook(emprestimo_id):
     # depois fazer adicionar na multa se estiver atrasado

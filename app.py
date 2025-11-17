@@ -303,12 +303,17 @@ def delete_editora(id_editora):
     return redirect(url_for("index"))
 
 
-@app.route("/livro/delete/<livro_id>", methods=["POST"])
+@app.route("/livro/delete/<int:livro_id>", methods=["POST"])
 @login_required
 def delete_livro(livro_id):
     if current_user.admin == 1:
+        for emprestimo in getEmprestimos():
+            if emprestimo["livro_id"] == livro_id:
+                if emprestimo["status_emprestimo"] in ("pendente", "atrasado"):
+                    flash("Você só pode deletar esse livro após a devolução de todas as unidades", "error")
+                    return redirect(url_for("livros"))
         deleteBook(livro_id)
-        flash('Livro deletado com sucesso', 'success')
+        flash("Livro deletado com sucesso", "success")
         return redirect(url_for("livros"))
     return redirect(url_for("index"))
 
