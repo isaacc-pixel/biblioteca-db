@@ -19,8 +19,8 @@
 
 <div id="modal-{{ url_for('devolver_livro', emprestimo_id=emprestimo['id_emprestimo']) }}" class="modal">
     <div class="modal-content">
-    <h3>Confirmar Empréstimo</h3>
-    <p>Você realmente deseja realizar o empréstimo deste livro?</p>
+    <h3>Confirmar Devolução</h3>
+    <p>Você realmente deseja realizar a devolução deste livro?</p>
     <div class="modal-botoes">
         <a href="{{ url_for('devolver_livro', emprestimo_id=emprestimo['id_emprestimo']) }}" class="confirmar">Confirmar</a>
         <a href="#!" class="cancelar">Cancelar</a>
